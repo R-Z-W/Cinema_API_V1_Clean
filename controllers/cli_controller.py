@@ -199,6 +199,7 @@ def seed_tables():
 
         # Add Employees
         for employee_data in employees:
+            # hash seeded passwords
             employee_data['password'] = bcrypt.generate_password_hash(employee_data['password']).decode('utf-8')
             employee = Employee(**employee_data)
             db.session.add(employee)

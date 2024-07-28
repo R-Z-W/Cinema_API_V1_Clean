@@ -30,10 +30,6 @@ def get_showtime(showtime_id):
 @showtime_bp.route('/', methods=['POST'])
 @role_check('Manager')
 def create_showtime():
-    # user_id = get_jwt_identity()
-    # user = db.session.scalar(db.select(User).filter_by(id=user_id))
-    # if user and user.role == 'employee':
-
     data = request.get_json()
     try:
         # Load data into schema to create a Showtime instance

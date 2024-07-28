@@ -22,7 +22,7 @@ class CustomerSchema(ma.SQLAlchemyAutoSchema):
     invoices = fields.List(fields.Nested('InvoiceSchema'))
 
 
-    # TODO Sending Post Method Fails As str > date object 
+    # TODO Sending Post Method Fails As Comparison of str > date object 
     # @validates('dob')
     # def validate_dob(self, value):
     #     if value > date.today():

@@ -30,10 +30,6 @@ def get_ticket(ticket_id):
 @ticket_bp.route('/', methods=['POST'])
 @role_check('Manager')
 def create_ticket():
-    # user_id = get_jwt_identity()
-    # user = db.session.scalar(db.select(User).filter_by(id=user_id))
-    # if user and user.role == 'employee':
-
     data = request.get_json()
     try:
         # Load data into schema to create a Ticket instance
