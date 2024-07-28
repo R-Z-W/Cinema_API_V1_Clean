@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required
 from models.movie import Movie, MovieSchema
 from init import db
 from utils import fetch_movie_data
+from decorator import role_check
 
 movie_bp = Blueprint('movie', __name__, url_prefix='/movies')
 
@@ -11,6 +12,7 @@ movies_schema = MovieSchema(many=True)
 
 # GET ALL MOVIES
 @movie_bp.route('/', methods=['GET'])
+@role_check('Manager') # Hide New Movies From Customers
 def get_all_movies():
     stmt = db.select(Movie).order_by(Movie.year)
     movies = db.session.scalars(stmt)
@@ -18,6 +20,7 @@ def get_all_movies():
 
 # GET MOVIE VIA ID
 @movie_bp.route('/<int:movie_id>', methods=['GET'])
+@role_check('Manager')
 def get_movie(movie_id):
     stmt = db.select(Movie).filter_by(id=movie_id)
     movie = db.session.scalar(stmt)
@@ -28,12 +31,8 @@ def get_movie(movie_id):
 
 # CREATE MOVIE
 @movie_bp.route('/', methods=['POST'])
-#@jwt_required()
+@role_check('Manager')
 def create_movie():
-    # user_id = get_jwt_identity()
-    # user = db.session.scalar(db.select(User).filter_by(id=user_id))
-    # if user and user.role == 'employee':
-
     data = request.get_json()
     try:
         # Load data into schema to create a Movie instance
@@ -47,7 +46,7 @@ def create_movie():
 
 # UPDATE MOVIE
 @movie_bp.route('/<int:movie_id>', methods=['PUT', 'PATCH'])
-#@jwt_required()
+@role_check('Manager')
 def update_movie(movie_id):
     data = request.get_json()
     stmt = db.select(Movie).filter_by(id=movie_id)
@@ -67,7 +66,7 @@ def update_movie(movie_id):
 
 # DELETE MOVIE
 @movie_bp.route('/<int:movie_id>', methods=['DELETE'])
-#@jwt_required()
+@role_check('Manager')
 def delete_movie(movie_id):
     stmt = db.select(Movie).filter_by(id=movie_id)
     movie = db.session.scalar(stmt)

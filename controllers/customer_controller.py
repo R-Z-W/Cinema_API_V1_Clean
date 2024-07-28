@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from init import db, ma
 from models.customer import Customer, CustomerSchema
+from decorator import role_check
 
 customer_bp = Blueprint('customer', __name__, url_prefix='/customers')
 
@@ -10,6 +11,7 @@ customers_schema = CustomerSchema(many=True)
 
 # GET ALL CUSTOMERS
 @customer_bp.route('/', methods=['GET'])
+@role_check('Manager')
 def get_all_customers():
     stmt = db.select(Customer).order_by(Customer.fname)
     customers = db.session.scalars(stmt)
@@ -17,6 +19,7 @@ def get_all_customers():
 
 # GET CUSTOMER VIA ID
 @customer_bp.route('/<int:customer_id>', methods=['GET'])
+@role_check('Manager')
 def get_customer(customer_id):
     stmt = db.select(Customer).filter_by(id=customer_id)
     customer = db.session.scalar(stmt)
@@ -27,12 +30,8 @@ def get_customer(customer_id):
 
 # CREATE CUSTOMER
 @customer_bp.route('/', methods=['POST'])
-#@jwt_required()
+@role_check('Manager')
 def create_customer():
-    # user_id = get_jwt_identity()
-    # user = db.session.scalar(db.select(User).filter_by(id=user_id))
-    # if user and user.role == 'employee':
-
     data = request.get_json()
     try:
         # Load data into schema to create a Customer instance
@@ -46,7 +45,7 @@ def create_customer():
 
 # UPDATE CUSTOMER
 @customer_bp.route('/<int:customer_id>', methods=['PUT', 'PATCH'])
-#@jwt_required()
+@role_check('Manager')
 def update_customer(customer_id):
     data = request.get_json()
     stmt = db.select(Customer).filter_by(id=customer_id)
@@ -66,7 +65,7 @@ def update_customer(customer_id):
 
 # DELETE CUSTOMER
 @customer_bp.route('/<int:customer_id>', methods=['DELETE'])
-#@jwt_required()
+@role_check('Manager')
 def delete_customer(customer_id):
     stmt = db.select(Customer).filter_by(id=customer_id)
     customer = db.session.scalar(stmt)

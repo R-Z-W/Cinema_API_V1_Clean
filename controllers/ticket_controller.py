@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from init import db, ma
 from models.ticket import Ticket, TicketSchema
+from decorator import role_check
 
 ticket_bp = Blueprint('ticket', __name__, url_prefix='/tickets')
 
@@ -27,7 +28,7 @@ def get_ticket(ticket_id):
 
 # CREATE TICKET
 @ticket_bp.route('/', methods=['POST'])
-#@jwt_required()
+@role_check('Manager')
 def create_ticket():
     # user_id = get_jwt_identity()
     # user = db.session.scalar(db.select(User).filter_by(id=user_id))
@@ -46,7 +47,7 @@ def create_ticket():
 
 # UPDATE TICKET
 @ticket_bp.route('/<int:ticket_id>', methods=['PUT', 'PATCH'])
-#@jwt_required()
+@role_check('Manager')
 def update_ticket(ticket_id):
     data = request.get_json()
     stmt = db.select(Ticket).filter_by(id=ticket_id)
@@ -66,7 +67,7 @@ def update_ticket(ticket_id):
 
 # DELETE TICKET
 @ticket_bp.route('/<int:ticket_id>', methods=['DELETE'])
-#@jwt_required()
+@role_check('Manager')
 def delete_ticket(ticket_id):
     stmt = db.select(Ticket).filter_by(id=ticket_id)
     ticket = db.session.scalar(stmt)

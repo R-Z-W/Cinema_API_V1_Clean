@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from init import db, ma, bcrypt
 from models.employee import Employee, EmployeeSchema
+from decorator import role_check
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employees')
 
@@ -10,6 +11,7 @@ employees_schema = EmployeeSchema(many=True)
 
 # GET ALL EMPLOYEES
 @employee_bp.route('/', methods=['GET'])
+@role_check('Manager')
 def get_all_employees():
     stmt = db.select(Employee).order_by(Employee.fname)
     employees = db.session.scalars(stmt)
@@ -17,6 +19,7 @@ def get_all_employees():
 
 # GET EMPLOYEE VIA ID
 @employee_bp.route('/<int:employee_id>', methods=['GET'])
+@role_check('Manager')
 def get_employee(employee_id):
     stmt = db.select(Employee).filter_by(id=employee_id)
     employee = db.session.scalar(stmt)
@@ -27,12 +30,8 @@ def get_employee(employee_id):
 
 # CREATE EMPLOYEE
 @employee_bp.route('/', methods=['POST'])
-#@jwt_required()
+@role_check('Manager')
 def create_employee():
-    # user_id = get_jwt_identity()
-    # user = db.session.scalar(db.select(User).filter_by(id=user_id))
-    # if user and user.role == 'employee':
-
     data = request.get_json()
     try:
         # Load data into schema to create a Employee instance
@@ -47,7 +46,7 @@ def create_employee():
 
 # UPDATE EMPLOYEE
 @employee_bp.route('/<int:employee_id>', methods=['PUT', 'PATCH'])
-#@jwt_required()
+@role_check('Manager')
 def update_employee(employee_id):
     data = request.get_json()
     stmt = db.select(Employee).filter_by(id=employee_id)

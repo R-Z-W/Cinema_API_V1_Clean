@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from init import db, ma
 from models.showtime import Showtime, ShowtimeSchema
+from decorator import role_check
 
 showtime_bp = Blueprint('showtime', __name__, url_prefix='/showtimes')
 
@@ -27,7 +28,7 @@ def get_showtime(showtime_id):
 
 # CREATE SHOWTIME
 @showtime_bp.route('/', methods=['POST'])
-#@jwt_required()
+@role_check('Manager')
 def create_showtime():
     # user_id = get_jwt_identity()
     # user = db.session.scalar(db.select(User).filter_by(id=user_id))
@@ -46,7 +47,7 @@ def create_showtime():
 
 # UPDATE SHOWTIME
 @showtime_bp.route('/<int:showtime_id>', methods=['PUT', 'PATCH'])
-#@jwt_required()
+@role_check('Manager')
 def update_showtime(showtime_id):
     data = request.get_json()
     stmt = db.select(Showtime).filter_by(id=showtime_id)
@@ -66,7 +67,7 @@ def update_showtime(showtime_id):
 
 # DELETE SHOWTIME
 @showtime_bp.route('/<int:showtime_id>', methods=['DELETE'])
-#@jwt_required()
+@role_check('Manager')
 def delete_showtime(showtime_id):
     stmt = db.select(Showtime).filter_by(id=showtime_id)
     showtime = db.session.scalar(stmt)
