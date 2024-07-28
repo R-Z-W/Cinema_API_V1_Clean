@@ -3,5 +3,4 @@ __pycache__
 .env
 utils.py
 user.py
-auth_controller.py
 .vscode

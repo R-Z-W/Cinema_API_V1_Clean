@@ -25,6 +25,7 @@ class Employee(db.Model):
     invoices = db.relationship('Invoice', back_populates='employee', cascade='all, delete')
 
 class EmployeeSchema(ma.SQLAlchemyAutoSchema):
+    
     invoices = fields.List(fields.Nested('InvoiceSchema'))
 
     # TODO Sending Post Method Fails As str > date object

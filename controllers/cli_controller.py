@@ -1,7 +1,7 @@
 import click
 from flask import current_app
 from flask import Blueprint
-from init import db
+from init import db, bcrypt
 from models.movie import Movie
 from models.theater import Theater
 from models.customer import Customer
@@ -199,6 +199,7 @@ def seed_tables():
 
         # Add Employees
         for employee_data in employees:
+            employee_data['password'] = bcrypt.generate_password_hash(employee_data['password']).decode('utf-8')
             employee = Employee(**employee_data)
             db.session.add(employee)
 

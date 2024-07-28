@@ -29,7 +29,7 @@ def create_app():
 
     # Register Blueprints
     app.register_blueprint(db_commands)
-    # app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp)
     app.register_blueprint(theater_bp)
     app.register_blueprint(movie_bp)
     app.register_blueprint(customer_bp)

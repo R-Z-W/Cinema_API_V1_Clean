@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db, ma
 from models.theater import Theater, TheaterSchema
+from models.employee import Employee
 
 
 theater_bp = Blueprint('theater', __name__, url_prefix='/theaters')
@@ -28,22 +29,23 @@ def get_theater(theater_id):
 
 # CREATE THEATER
 @theater_bp.route('/', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_theater():
-    # user_id = get_jwt_identity()
-    # user = db.session.scalar(db.select(User).filter_by(id=user_id))
-    # if user and user.role == 'employee':
-
-    data = request.get_json()
-    try:
-        # Load data into schema to create a Theater instance
-        theater_data = TheaterSchema().load(data)
-        theater = Theater(**theater_data) # ** unpacks the dictionary
-        db.session.add(theater)
-        db.session.commit()
-        return theater_schema.dump(theater), 201
-    except Exception as e:
-        return {"message": str(e)}, 400
+    user_id = get_jwt_identity()
+    user = db.session.scalar(db.select(Employee).filter_by(id=user_id, role='Manager'))
+    if user:
+        data = request.get_json()
+        try:
+            # Load data into schema to create a Theater instance
+            theater_data = TheaterSchema().load(data)
+            theater = Theater(**theater_data) # ** unpacks the dictionary
+            db.session.add(theater)
+            db.session.commit()
+            return theater_schema.dump(theater), 201
+        except Exception as e:
+            return {"message": str(e)}, 400
+    else:
+        return {"error": "Unauthorized"}, 401
 
 # UPDATE THEATER
 @theater_bp.route('/<int:theater_id>', methods=['PUT', 'PATCH'])

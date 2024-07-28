@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from init import db, ma
+from init import db, ma, bcrypt
 from models.employee import Employee, EmployeeSchema
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employees')
@@ -37,6 +37,7 @@ def create_employee():
     try:
         # Load data into schema to create a Employee instance
         employee_data = EmployeeSchema().load(data)
+        employee_data['password'] = bcrypt.generate_password_hash(employee_data['password']).decode('utf-8')
         employee = Employee(**employee_data) # ** unpacks the dictionary
         db.session.add(employee)
         db.session.commit()
