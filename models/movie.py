@@ -8,11 +8,11 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     year = db.Column(db.Integer)
-    runtime = db.Column(db.Integer)
-    genre = db.Column(db.String(100))
+    runtime = db.Column(db.String(200))
+    genre = db.Column(db.String(255))
     director = db.Column(db.String(100))
     plot = db.Column(db.Text)
-    language = db.Column(db.String(50))
+    language = db.Column(db.String(255))
     rating = db.Column(db.Float)
 
     # Relationships

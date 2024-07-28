@@ -33,7 +33,7 @@ def seed_tables():
             {
                 'title': 'Inception',
                 'year': 2010,
-                'runtime': 148,
+                'runtime': '148',
                 'genre': 'Action',
                 'director': 'Christopher Nolan',
                 'plot': 'A thief with the rare ability to enter people\'s dreams and steal their secrets from their subconscious is given a final task that requires him to do the impossible: inception.',
@@ -43,7 +43,7 @@ def seed_tables():
             {
                 'title': 'The Matrix',
                 'year': 1999,
-                'runtime': 136,
+                'runtime': '136',
                 'genre': 'Science Fiction',
                 'director': 'Lana Wachowski, Lilly Wachowski',
                 'plot': 'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.',
@@ -53,7 +53,7 @@ def seed_tables():
             {
                 'title': 'The Godfather',
                 'year': 1972,
-                'runtime': 175,
+                'runtime': '175',
                 'genre': 'Crime',
                 'director': 'Francis Ford Coppola',
                 'plot': 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',
